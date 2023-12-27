@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.CheckListDao">
+
+    <select id="findCSDByTime" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售单" as t,sale_sheet.create_time, product.name,product.type,sale_sheet_content.quantity,
+        sale_sheet_content.unit_price, sale_sheet_content.total_price*sale_sheet.discount as totalPrice
+        from sale_sheet,sale_sheet_content,product where sale_sheet.state = "审批完成"
+        and sale_sheet.id = sale_sheet_content.sale_sheet_id and sale_sheet_content.pid = product.id
+        and sale_sheet.create_time <![CDATA[<=]]> #{endTime}
+        and sale_sheet.create_time <![CDATA[>=]]> #{beginTime}
+    </select>
+    <select id="findCSDByName" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售单" as t,sale_sheet.create_time, product.name,product.type,sale_sheet_content.quantity,
+        sale_sheet_content.unit_price, sale_sheet_content.total_price*sale_sheet.discount as totalPrice
+        from sale_sheet,sale_sheet_content,product where sale_sheet.state = "审批完成"
+        and sale_sheet.id = sale_sheet_content.sale_sheet_id and sale_sheet_content.pid = product.id
+        and sale_sheet.operator = #{name}
+    </select>
+    <select id="findCSDByProduct" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售单" as t,sale_sheet.create_time, product.name,product.type,sale_sheet_content.quantity,
+        sale_sheet_content.unit_price, sale_sheet_content.total_price*sale_sheet.discount as totalPrice
+        from sale_sheet,sale_sheet_content,product where sale_sheet.state = "审批完成"
+        and sale_sheet.id = sale_sheet_content.sale_sheet_id and sale_sheet_content.pid = product.id
+        and product.name = #{product}
+    </select>
+    <select id="findCSDByCustomer" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售单" as t,sale_sheet.create_time, product.name,product.type,sale_sheet_content.quantity,
+        sale_sheet_content.unit_price, sale_sheet_content.total_price*sale_sheet.discount as totalPrice
+        from sale_sheet,sale_sheet_content,product where sale_sheet.state = "审批完成"
+        and sale_sheet.id = sale_sheet_content.sale_sheet_id and sale_sheet_content.pid = product.id
+        and sale_sheet.supplier = #{id}
+    </select>
+
+
+    <select id="findCSRDByTime" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售退货单" as t,sale_returns_sheet.create_time, product.name,product.type,sale_returns_sheet_content.quantity,
+        sale_returns_sheet_content.unit_price, sale_returns_sheet_content.total_price
+        from sale_returns_sheet,sale_returns_sheet_content,product where sale_returns_sheet.state = "审批完成"
+        and sale_returns_sheet.id = sale_returns_sheet_content.sale_returns_sheet_id and sale_returns_sheet_content.pid = product.id
+        and sale_returns_sheet.create_time <![CDATA[<=]]> #{endTime}
+        and sale_returns_sheet.create_time <![CDATA[>=]]> #{beginTime}
+    </select>
+
+    <select id="findCSRDByName" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售退货单" as t,sale_returns_sheet.create_time, product.name,product.type,sale_returns_sheet_content.quantity,
+        sale_returns_sheet_content.unit_price, sale_returns_sheet_content.total_price
+        from sale_returns_sheet,sale_returns_sheet_content,product where sale_returns_sheet.state = "审批完成"
+        and sale_returns_sheet.id = sale_returns_sheet_content.sale_returns_sheet_id and sale_returns_sheet_content.pid = product.id
+        and sale_returns_sheet.operator = #{operator}
+    </select>
+
+    <select id="findCSRDByProduct" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售退货单" as t,sale_returns_sheet.create_time, product.name,product.type,sale_returns_sheet_content.quantity,
+        sale_returns_sheet_content.unit_price, sale_returns_sheet_content.total_price
+        from sale_returns_sheet,sale_returns_sheet_content,product where sale_returns_sheet.state = "审批完成"
+        and sale_returns_sheet.id = sale_returns_sheet_content.sale_returns_sheet_id and sale_returns_sheet_content.pid = product.id
+        and product.name = #{product}
+    </select>
+
+    <select id="findCSRDByCustomer" resultType="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        select "销售退货单" as t,sale_returns_sheet.create_time, product.name,product.type,sale_returns_sheet_content.quantity,
+        sale_returns_sheet_content.unit_price, sale_returns_sheet_content.total_price
+        from sale_returns_sheet,sale_returns_sheet_content,product,sale_sheet where sale_returns_sheet.state = "审批完成"
+        and sale_returns_sheet.id = sale_returns_sheet_content.sale_returns_sheet_id and sale_returns_sheet_content.pid = product.id
+        and sale_sheet.id = sale_returns_sheet.sale_sheet_id and sale_sheet.supplier = #{id}
+    </select>
+
+
+    <resultMap id="CheckSaleDetailPO" type="com.nju.edu.erp.model.po.CheckSaleDetailPO">
+        <result column="create_time" property="createTime"></result>
+        <result column="name" property="name"></result>
+        <result column="type" property="type"></result>
+        <result column="quantity" property="quantity"></result>
+        <result column="unit_price" property="unitPrice"></result>
+        <result column="total_price" property="totalPrice"></result>
+    </resultMap>
+
+</mapper>

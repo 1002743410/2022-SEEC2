@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nju.edu.erp.dao.ReceiptDao">
+    <insert id="saveReceipt">
+            insert into receipt (id, custom, operator,totalAmount, `state`)
+            values (#{id},#{custom},#{operator},#{totalAmount}, #{state})
+    </insert>
+
+    <insert id="saveTransferBatch" useGeneratedKeys="true" keyProperty="id">
+        insert into receipt_transfer_account (receipt_id, bid, amount, remark) values
+
+            (#{receiptId},#{bid},#{amount},#{remark})
+
+    </insert>
+
+    <update id="updateState">
+        update receipt
+        set state = #{state}
+        where id = #{receiptId}
+    </update>
+
+    <select id="getLatestReceipt" resultType="com.nju.edu.erp.model.po.ReceiptPO">
+        select * from receipt order by id desc limit 0,1 ;
+    </select>
+
+    <select id="findAllReceipt" resultType="com.nju.edu.erp.model.po.ReceiptPO">
+        select * from receipt;
+    </select>
+
+    <select id="findTransferAccountById" resultType="com.nju.edu.erp.model.po.TransferAccountPO">
+        select * from receipt_transfer_account where receipt_id = #{receiptId};
+    </select>
+
+    <select id="findOneReceiptById" resultType="com.nju.edu.erp.model.po.ReceiptPO">
+        select * from receipt where id = #{id};
+    </select>
+
+    <select id="findReceiptByState" resultType="com.nju.edu.erp.model.po.ReceiptPO">
+        select * from receipt where state = #{state}
+    </select>
+    <resultMap id="ReceiptPO" type="com.nju.edu.erp.model.po.ReceiptPO">
+        <result column="id" property="id"></result>
+        <result column="custom" property="custom"></result>
+        <result column="totalAmount" property="totalAmount"></result>
+        <result column="state" property="state"></result>
+        <result column="operator" property="operator"></result>
+    </resultMap>
+    <resultMap id="TransferAccountPO" type="com.nju.edu.erp.model.po.TransferAccountPO">
+        <result column="id" property="id"></result>
+        <result column="bid" property="bid"></result>
+        <result column="remark" property="remark"></result>
+        <result column="receiptId" property="receiptId"></result>
+        <result column="amount" property="amount"></result>
+    </resultMap>
+</mapper>

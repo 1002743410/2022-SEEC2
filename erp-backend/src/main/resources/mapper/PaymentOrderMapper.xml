@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nju.edu.erp.dao.PaymentOrderDao">
+    <insert id="savePaymentOrder">
+        insert into payment_order (id, custom, operator, bid, totalAmount, state)
+        values (#{id},#{custom},#{operator},#{bid},#{totalAmount}, #{state})
+    </insert>
+
+    <insert id="saveTermBatch" useGeneratedKeys="true" keyProperty="id">
+        insert into term_sheet (payment_order_id, amount, remark) values
+
+            (#{PaymentOrderId},#{amount},#{remark})
+
+    </insert>
+
+    <update id="updateState">
+        update payment_order
+        set `state` = #{state}
+        where id = #{paymentOrderId}
+    </update>
+
+    <select id="getLatestPaymentOrder" resultType="com.nju.edu.erp.model.po.PaymentOrderPO">
+        select * from payment_order order by id desc limit 0,1 ;
+    </select>
+
+    <select id="findAllPaymentOrder" resultType="com.nju.edu.erp.model.po.PaymentOrderPO">
+        select * from payment_order;
+    </select>
+
+    <select id="findTermSheetById" resultType="com.nju.edu.erp.model.po.TermSheetPO">
+        select * from term_sheet where payment_order_id = #{PaymentOrderId};
+    </select>
+
+    <select id="findOnePaymentOrderById" resultType="com.nju.edu.erp.model.po.PaymentOrderPO">
+        select * from payment_order where id = #{id};
+    </select>
+
+    <select id="findPaymentOrderByState" resultType="com.nju.edu.erp.model.po.PaymentOrderPO">
+        select * from payment_order where state = #{state}
+    </select>
+    <resultMap id="PaymentOrderPO" type="com.nju.edu.erp.model.po.PaymentOrderPO">
+        <result column="id" property="id"></result>
+        <result column="bid" property="bid"></result>
+        <result column="operator" property="operator"></result>
+        <result column="totalAmount" property="totalAmount"></result>
+        <result column="state" property="state"></result>
+        <result column="custom" property="custom"></result>
+    </resultMap>
+    <resultMap id="TermSheetPO" type="com.nju.edu.erp.model.po.TermSheetPO">
+        <result column="id" property="id"></result>
+        <result column="amount" property="amount"></result>
+        <result column="remark" property="remark"></result>
+        <result column="payment_order_id" property="paymentOrderId"></result>
+    </resultMap>
+
+
+</mapper>
